@@ -1,6 +1,7 @@
 import { UserPresenter } from '../../presenters/user-presenter';
 import { CreateUserService } from '../../../services/users/create-user.service';
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { ApiError } from '../../../services/errors/api-error';
 
 type Body = {
   name: string;
@@ -18,6 +19,12 @@ export class CreateUserController {
     @Body()
     { name, email, password }: Body,
   ) {
+    if (!name || !email || !password) {
+      throw new ApiError({
+        message: 'All fields are required.',
+        statusCode: 400,
+      });
+    }
     const result = await this.createUserService.execute({
       name,
       email,

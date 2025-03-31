@@ -50,4 +50,34 @@ describe('[POST] /users', () => {
       'User with email email_existing@email.com already exists.',
     );
   });
+
+  it('should return 400 when name is not defined', async () => {
+    const response = await request(app.getHttpServer()).post('/users').send({
+      email: 'mariadoe@email.com',
+      password: 'super123',
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('All fields are required.');
+  });
+
+  it('should return 400 when email is not defined', async () => {
+    const response = await request(app.getHttpServer()).post('/users').send({
+      name: 'Maria Doe',
+      password: 'super123',
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('All fields are required.');
+  });
+
+  it('should return 400 when password is not defined', async () => {
+    const response = await request(app.getHttpServer()).post('/users').send({
+      name: 'Maria Doe',
+      email: 'mariadoe@email.com',
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('All fields are required.');
+  });
 });
