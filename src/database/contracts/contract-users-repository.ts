@@ -8,4 +8,5 @@ export type CreateUser = {
 
 export abstract class UsersRepository {
   abstract create: (data: CreateUser) => Promise<User>;
+  abstract findByEmail: (email: string) => Promise<User | null>;
 }

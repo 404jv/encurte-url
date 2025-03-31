@@ -7,9 +7,9 @@ import { PrismaService } from '../src/database/prisma/prisma.service';
 
 describe('[POST] /users', () => {
   let app: INestApplication<App>;
+  let prisma: PrismaService;
 
   afterAll(async () => {
-    const prisma = new PrismaService();
     await prisma.user.deleteMany();
   });
 
@@ -17,8 +17,9 @@ describe('[POST] /users', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
-
     app = moduleFixture.createNestApplication();
+    prisma = app.get(PrismaService);
+    app.useLogger(false);
     await app.init();
   });
 
@@ -29,10 +30,29 @@ describe('[POST] /users', () => {
       password: 'super123',
     });
 
-    console.log(response.body);
-
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('id');
     expect(response.body.password).toBeFalsy();
+  });
+
+  it('should return 409 when try to create user with same email', async () => {
+    await prisma.user.create({
+      data: {
+        name: 'Maria Doe',
+        email: 'email_existing@email.com',
+        password: 'super123',
+      },
+    });
+
+    const response = await request(app.getHttpServer()).post('/users').send({
+      name: 'Evan Doe',
+      email: 'email_existing@email.com',
+      password: 'super123',
+    });
+
+    expect(response.status).toBe(409);
+    expect(response.body.message).toBe(
+      'User with email email_existing@email.com already exists.',
+    );
   });
 });
