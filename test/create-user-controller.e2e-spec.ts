@@ -1,9 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { App } from 'supertest/types';
-import { AppModule } from '../src/app.module';
 import * as request from 'supertest';
 import { PrismaService } from '../src/database/prisma/prisma.service';
+import { makeApp } from './factories/app-factory';
 
 describe('[POST] /users', () => {
   let app: INestApplication<App>;
@@ -14,12 +13,8 @@ describe('[POST] /users', () => {
   });
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
+    app = await makeApp();
     prisma = app.get(PrismaService);
-    app.useLogger(false);
     await app.init();
   });
 
