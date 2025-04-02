@@ -8,10 +8,10 @@ export class BcryptHasher implements HashGenerator, HashComparer {
   private HASH_SALT_LENGTH = 8;
 
   async hash(plain: string): Promise<string> {
-    return hash(plain, this.HASH_SALT_LENGTH) as Promise<string>;
+    return hash(plain, this.HASH_SALT_LENGTH);
   }
 
   async compare(plain: string, hash: string): Promise<boolean> {
-    return compare(plain, hash) as Promise<boolean>;
+    return compare(plain, hash);
   }
 }

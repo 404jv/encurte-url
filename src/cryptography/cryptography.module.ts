@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { HashGenerator } from './contract-hash-generator';
-import { HashComparer } from './contract-hash-comparer';
-import { BcryptHasher } from '../bcrypt-hasher';
+import { HashGenerator } from './contracts/contract-hash-generator';
+import { HashComparer } from './contracts/contract-hash-comparer';
+import { BcryptHasher } from './bcrypt-hasher';
 
 @Module({
   providers: [
