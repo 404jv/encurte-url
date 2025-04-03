@@ -6,17 +6,23 @@ import { AuthenticateUserController } from './controllers/users/authenticate-use
 import { AuthenticateUserService } from '../services/users/authenticate-user.service';
 import { CryptographyModule } from '../cryptography/cryptography.module';
 import { JwtModule } from '@nestjs/jwt';
+import { CreateLinkController } from './controllers/links/create-link.controller';
+import { CreateLinkService } from '../services/users/create-link.service';
 
 @Module({
   imports: [
     DatabaseModule,
     CryptographyModule,
     JwtModule.register({
-      secret: 'your-secret-key', // Substitua por sua chave secreta
-      signOptions: { expiresIn: '1h' }, // Configuração de expiração do token
+      secret: 'your-secret-key',
+      signOptions: { expiresIn: '1h' },
     }),
   ],
-  controllers: [CreateUserController, AuthenticateUserController],
-  providers: [CreateUserService, AuthenticateUserService],
+  controllers: [
+    CreateUserController,
+    AuthenticateUserController,
+    CreateLinkController,
+  ],
+  providers: [CreateUserService, AuthenticateUserService, CreateLinkService],
 })
 export class HttpModule {}
