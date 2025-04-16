@@ -28,4 +28,20 @@ describe('[POST] /links', () => {
     expect(response.body).not.toHaveProperty('deletedAt');
     expect(response.body.total_clicks).toBe(0);
   });
+
+  it('should return 400 if url is not defined', async () => {
+    const response = await request(app.getHttpServer()).post('/links').send({});
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('All fields are required.');
+  });
+
+  it('should return 400 if url is invalid', async () => {
+    const response = await request(app.getHttpServer()).post('/links').send({
+      url: 'invalid-url',
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('URL inválida');
+  });
 });

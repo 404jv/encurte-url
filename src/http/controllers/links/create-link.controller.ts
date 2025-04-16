@@ -1,3 +1,4 @@
+import { ApiError } from '../../../services/errors/api-error';
 import { CreateLinkService } from '../../../services/users/create-link.service';
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 
@@ -15,12 +16,12 @@ export class CreateLinkController {
     @Body()
     { url }: Body,
   ) {
-    // if (!name || !email || !password) {
-    //   throw new ApiError({
-    //     message: 'All fields are required.',
-    //     statusCode: 400,
-    //   });
-    // }
+    if (!url) {
+      throw new ApiError({
+        message: 'All fields are required.',
+        statusCode: 400,
+      });
+    }
     const link = await this.createLinkService.execute({ url });
     return link;
   }
