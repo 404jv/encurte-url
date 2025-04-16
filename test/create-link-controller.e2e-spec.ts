@@ -23,10 +23,9 @@ describe('[POST] /links', () => {
       url: 'https://example.com',
     });
 
-    console.log(response.body);
-
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('id');
     expect(response.body).not.toHaveProperty('deletedAt');
+    expect(response.body.total_clicks).toBe(0);
   });
 });
