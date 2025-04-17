@@ -3,7 +3,7 @@ import { App } from 'supertest/types';
 import * as request from 'supertest';
 import { PrismaService } from '../src/database/prisma/prisma.service';
 import { makeApp } from './factories/app-factory';
-import { createUser } from './factories/user-factory';
+import { createUserAndAuthenticate } from './factories/user-factory';
 
 describe('[POST] /links', () => {
   let app: INestApplication<App>;
@@ -49,18 +49,11 @@ describe('[POST] /links', () => {
   });
 
   it('should be able to create a link with user id', async () => {
-    await createUser(prisma);
-    const tokenRequest = await request(app.getHttpServer())
-      .post('/users/login')
-      .send({
-        email: 'jhon@email.com',
-        password: 'super123',
-      });
-    const token = tokenRequest.body.accessToken;
+    const { accessToken } = await createUserAndAuthenticate(prisma);
 
     const response = await request(app.getHttpServer())
       .post('/links')
-      .auth(token, { type: 'bearer' })
+      .auth(accessToken, { type: 'bearer' })
       .send({
         url: 'https://example.com',
       });
