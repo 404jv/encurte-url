@@ -52,4 +52,29 @@ describe('[DELETE] /links/:id', () => {
     expect(response.status).toBe(204);
     expect(response.body).toEqual({});
   });
+
+  it('should not be able to a user delete others links', async () => {
+    const linkWithoutOwner = await prisma.link.create({
+      data: {
+        url: 'https://example.com',
+        id: '654321',
+        totalClicks: 0,
+      },
+    });
+
+    const response = await request(app.getHttpServer())
+      .delete(`/links/${linkWithoutOwner.id}`)
+      .set('Authorization', `Bearer ${userToken}`);
+
+    const link = await prisma.link.findUnique({
+      where: {
+        id: '654321',
+      },
+    });
+    expect(link).toBeTruthy();
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe(
+      'You are not allowed to delete this link.',
+    );
+  });
 });

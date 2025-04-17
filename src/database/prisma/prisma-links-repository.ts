@@ -27,4 +27,12 @@ export class PrismaLinksRepository implements LinksRepository {
       },
     });
   }
+
+  async findById(id: string): Promise<Link | null> {
+    return this.prismaService.link.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
 }
