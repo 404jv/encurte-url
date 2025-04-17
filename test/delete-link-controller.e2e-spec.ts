@@ -44,7 +44,8 @@ describe('[DELETE] /links/:id', () => {
         id: link.id,
       },
     });
-    expect(linkDeleted).toBeNull();
+    expect(linkDeleted?.deletedAt).toBeTruthy();
+    expect(linkDeleted).toBeTruthy();
     expect(response.status).toBe(204);
     expect(response.body).toEqual({});
   });
@@ -68,6 +69,7 @@ describe('[DELETE] /links/:id', () => {
       },
     });
     expect(link).toBeTruthy();
+    expect(link?.deletedAt).toBeNull();
     expect(response.status).toBe(401);
     expect(response.body.message).toBe(
       'You are not allowed to delete this link.',
