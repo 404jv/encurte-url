@@ -3,7 +3,7 @@ import { App } from 'supertest/types';
 import * as request from 'supertest';
 import { PrismaService } from '../src/database/prisma/prisma.service';
 import { makeApp } from './factories/app-factory';
-import { createManyLinks } from './factories/link-factory';
+import { createLink, createManyLinks } from './factories/link-factory';
 import { createUserAndAuthenticate } from './factories/user-factory';
 
 describe('[GET] /links', () => {
@@ -45,5 +45,21 @@ describe('[GET] /links', () => {
     expect(response.body.message).toBe(
       'Missing or invalid Authorization header',
     );
+  });
+
+  it('should not be able to a user list others links', async () => {
+    const linkWithoutOwner = await createLink({ prisma, id: '232323' });
+
+    const response = await request(app.getHttpServer())
+      .get(`/links`)
+      .set('Authorization', `Bearer ${userToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveLength(3);
+    response.body.map((link) => {
+      expect(link.id).not.toBe(linkWithoutOwner.id);
+      expect(link).not.toHaveProperty('deleted_at');
+      expect(link).not.toHaveProperty('deletedAt');
+    });
   });
 });
