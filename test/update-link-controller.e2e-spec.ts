@@ -66,4 +66,16 @@ describe('[PUT] /links', () => {
     expect(response.status).toBe(400);
     expect(response.body.message).toBe('All fields are required.');
   });
+
+  it('should return 400 if url is invalid', async () => {
+    const response = await request(app.getHttpServer())
+      .put(`/links/${linkId}`)
+      .auth(token, { type: 'bearer' })
+      .send({
+        url: 'invalid-url',
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('URL inválida');
+  });
 });

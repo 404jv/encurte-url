@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { LinksRepository } from '../../database/contracts/contract-links-repository';
 import { LinkPresenter } from '../../http/presenters/link-presenter';
 
@@ -13,9 +17,9 @@ export class UpdateLinkService {
   constructor(private linksRepository: LinksRepository) {}
 
   async execute({ url, id }: Request): Promise<LinkPresenter> {
-    // if (!this.isValidUrl(url)) {
-    //   throw new BadRequestException('URL inválida');
-    // }
+    if (!this.isValidUrl(url)) {
+      throw new BadRequestException('URL inválida');
+    }
     const linkExists = await this.linksRepository.findById(id);
     if (!linkExists) {
       throw new NotFoundException('Link not found.');
