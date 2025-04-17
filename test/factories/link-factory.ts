@@ -9,6 +9,11 @@ type CreateLink = {
   deletedAt?: Date | null;
 };
 
+type CreateManyLinks = {
+  prisma: PrismaService;
+  userId?: string;
+};
+
 export async function createLink({
   prisma,
   id,
@@ -24,6 +29,47 @@ export async function createLink({
       totalClicks: totalClicks || 0,
       userId: userId || null,
       deletedAt: deletedAt || null,
+    },
+  });
+}
+
+export async function createManyLinks({ prisma, userId }: CreateManyLinks) {
+  await prisma.link.createMany({
+    data: [
+      {
+        url: 'https://example.com',
+        id: '123456',
+        totalClicks: 0,
+        userId: userId || null,
+        deletedAt: null,
+      },
+      {
+        url: 'https://example2.com',
+        id: '654321',
+        totalClicks: 0,
+        userId: userId || null,
+        deletedAt: null,
+      },
+      {
+        url: 'https://example3.com',
+        id: '112345',
+        totalClicks: 0,
+        userId: userId || null,
+        deletedAt: null,
+      },
+      {
+        url: 'https://example4.com',
+        id: '122345',
+        totalClicks: 3,
+        userId: userId || null,
+        deletedAt: new Date(),
+      },
+    ],
+  });
+  return await prisma.link.findMany({
+    where: {
+      userId: userId || null,
+      deletedAt: null,
     },
   });
 }
