@@ -14,6 +14,11 @@ export class GetLinkService {
     if (!link || link.deletedAt !== null) {
       throw new NotFoundException('Link not found.');
     }
+    await this.linksRepository.update({
+      id: link.id,
+      url: link.url,
+      totalClicks: link.totalClicks + 1,
+    });
     const result = LinkPresenter.format(link);
     return result;
   }

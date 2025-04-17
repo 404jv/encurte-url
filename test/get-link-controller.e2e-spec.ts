@@ -26,9 +26,13 @@ describe('[GET] /links/:id', () => {
     await app.init();
   });
 
-  it('should be able to get a valid link', async () => {
+  it('should be able to get a valid link and add click', async () => {
     const response = await request(app.getHttpServer()).get(`/${linkId}`);
 
+    const link = await prisma.link.findUnique({
+      where: { id: linkId },
+    });
+    expect(link?.totalClicks).toBe(1);
     expect(response.status).toBe(302);
   });
 

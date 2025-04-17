@@ -56,6 +56,7 @@ export class PrismaLinksRepository implements LinksRepository {
       },
       data: {
         url: data.url,
+        totalClicks: data.totalClicks,
       },
     });
   }
