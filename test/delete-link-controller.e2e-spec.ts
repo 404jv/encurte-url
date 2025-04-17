@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { PrismaService } from '../src/database/prisma/prisma.service';
 import { makeApp } from './factories/app-factory';
 import { createUserAndAuthenticate } from './factories/user-factory';
+import { createLink } from './factories/link-factory';
 
 describe('[DELETE] /links/:id', () => {
   let app: INestApplication<App>;
@@ -26,14 +27,7 @@ describe('[DELETE] /links/:id', () => {
   });
 
   it('should be able to a user delete their own link', async () => {
-    const link = await prisma.link.create({
-      data: {
-        url: 'https://example.com',
-        userId,
-        id: '123456',
-        totalClicks: 0,
-      },
-    });
+    const link = await createLink({ prisma, userId });
 
     const response = await request(app.getHttpServer())
       .delete(`/links/${link.id}`)
@@ -51,13 +45,7 @@ describe('[DELETE] /links/:id', () => {
   });
 
   it('should not be able to a user delete others links', async () => {
-    const linkWithoutOwner = await prisma.link.create({
-      data: {
-        url: 'https://example.com',
-        id: '654321',
-        totalClicks: 0,
-      },
-    });
+    const linkWithoutOwner = await createLink({ prisma, id: '654321' });
 
     const response = await request(app.getHttpServer())
       .delete(`/links/${linkWithoutOwner.id}`)
@@ -77,8 +65,10 @@ describe('[DELETE] /links/:id', () => {
   });
 
   it('should return 404 when link id doest not exists', async () => {
+    const invalidLinkId = 'non-existing-id';
+
     const response = await request(app.getHttpServer())
-      .delete(`/links/non-existing-id`)
+      .delete(`/links/${invalidLinkId}`)
       .set('Authorization', `Bearer ${userToken}`);
 
     expect(response.status).toBe(404);
