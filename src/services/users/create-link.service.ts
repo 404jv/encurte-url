@@ -2,11 +2,16 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { LinksRepository } from '../../database/contracts/contract-links-repository';
 import { LinkPresenter } from '../../http/presenters/link-presenter';
 
+type Request = {
+  url: string;
+  userId?: string;
+};
+
 @Injectable()
 export class CreateLinkService {
   constructor(private linksRepository: LinksRepository) {}
 
-  async execute({ url, userId }: any): Promise<LinkPresenter> {
+  async execute({ url, userId }: Request): Promise<LinkPresenter> {
     if (!this.isValidUrl(url)) {
       throw new BadRequestException('URL inválida');
     }
