@@ -38,4 +38,13 @@ export class PrismaLinksRepository implements LinksRepository {
       },
     });
   }
+
+  async findAllByUserId(id: string): Promise<Link[]> {
+    return this.prismaService.link.findMany({
+      where: {
+        deletedAt: null,
+        userId: id,
+      },
+    });
+  }
 }
