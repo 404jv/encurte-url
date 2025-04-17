@@ -7,7 +7,7 @@ import { AuthenticateUserService } from '../services/users/authenticate-user.ser
 import { CryptographyModule } from '../cryptography/cryptography.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CreateLinkController } from './controllers/links/create-link.controller';
-import { CreateLinkService } from '../services/users/create-link.service';
+import { CreateLinkService } from '../services/links/create-link.service';
 
 @Module({
   imports: [
