@@ -1,4 +1,3 @@
-import { GetIdAuthGuard } from '../../../auth/get-id-auth.guard';
 import {
   Body,
   Controller,
@@ -11,6 +10,7 @@ import {
 import { Request } from 'express';
 import { UpdateLinkService } from '../../../services/links/update-link.service';
 import { ApiError } from '../../../services/errors/api-error';
+import { AuthGuard } from '../../../auth/jwt-auth.guard';
 
 type Body = {
   url: string;
@@ -21,7 +21,7 @@ type ParamType = {
 };
 
 @Controller('/links/:id')
-@UseGuards(GetIdAuthGuard)
+@UseGuards(AuthGuard)
 export class UpdateLinkController {
   constructor(private updateLinkService: UpdateLinkService) {}
 

@@ -78,4 +78,17 @@ describe('[PUT] /links', () => {
     expect(response.status).toBe(400);
     expect(response.body.message).toBe('URL inválida');
   });
+
+  it('should be able to an anonymous list links', async () => {
+    const response = await request(app.getHttpServer())
+      .put(`/links/${linkId}`)
+      .send({
+        url: 'https://new.example.com',
+      });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe(
+      'Missing or invalid Authorization header',
+    );
+  });
 });
