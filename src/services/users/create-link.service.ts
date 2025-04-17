@@ -6,7 +6,7 @@ import { LinkPresenter } from '../../http/presenters/link-presenter';
 export class CreateLinkService {
   constructor(private linksRepository: LinksRepository) {}
 
-  async execute({ url }: any): Promise<LinkPresenter> {
+  async execute({ url, userId }: any): Promise<LinkPresenter> {
     if (!this.isValidUrl(url)) {
       throw new BadRequestException('URL inválida');
     }
@@ -14,6 +14,7 @@ export class CreateLinkService {
     const link = await this.linksRepository.create({
       id,
       url,
+      userId,
     });
     const result = LinkPresenter.format(link);
     return result;

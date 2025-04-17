@@ -7,6 +7,7 @@ type LinkPresenterResponse = {
   total_clicks: number;
   created_at: Date;
   updated_at: Date;
+  user_id: string | null;
 };
 
 export class LinkPresenter {
@@ -16,6 +17,7 @@ export class LinkPresenter {
       url: `http://localhost:3000/${link.id}`,
       origin_url: link.url,
       total_clicks: link.totalClicks,
+      user_id: link.userId,
       created_at: link.createdAt,
       updated_at: link.updatedAt,
     };

@@ -3,6 +3,7 @@ import { App } from 'supertest/types';
 import * as request from 'supertest';
 import { PrismaService } from '../src/database/prisma/prisma.service';
 import { makeApp } from './factories/app-factory';
+import { hash } from 'bcryptjs';
 
 describe('[POST] /links', () => {
   let app: INestApplication<App>;
@@ -26,6 +27,8 @@ describe('[POST] /links', () => {
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('id');
     expect(response.body).not.toHaveProperty('deletedAt');
+    expect(response.body).not.toHaveProperty('deleted_at');
+    expect(response.body.user_id).toBeNull();
     expect(response.body.total_clicks).toBe(0);
   });
 
@@ -43,5 +46,35 @@ describe('[POST] /links', () => {
 
     expect(response.status).toBe(400);
     expect(response.body.message).toBe('URL inválida');
+  });
+
+  it('should be able to create a link with user id', async () => {
+    await prisma.user.create({
+      data: {
+        name: 'Jhon Doe',
+        password: await hash('super123', 8),
+        email: 'jhon@email.com',
+      },
+    });
+    const tokenRequest = await request(app.getHttpServer())
+      .post('/users/login')
+      .send({
+        email: 'jhon@email.com',
+        password: 'super123',
+      });
+    const token = tokenRequest.body.accessToken;
+
+    const response = await request(app.getHttpServer())
+      .post('/links')
+      .auth(token, { type: 'bearer' })
+      .send({
+        url: 'https://example.com',
+      });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).not.toHaveProperty('deletedAt');
+    expect(response.body.total_clicks).toBe(0);
+    expect(response.body.user_id).toBeDefined();
   });
 });
