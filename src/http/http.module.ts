@@ -8,6 +8,8 @@ import { CryptographyModule } from '../cryptography/cryptography.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CreateLinkController } from './controllers/links/create-link.controller';
 import { CreateLinkService } from '../services/links/create-link.service';
+import { DeleteLinkController } from './controllers/links/delete-link.controller';
+import { DeleteLinkService } from '../services/links/delete-link.service';
 
 @Module({
   imports: [
@@ -22,7 +24,13 @@ import { CreateLinkService } from '../services/links/create-link.service';
     CreateUserController,
     AuthenticateUserController,
     CreateLinkController,
+    DeleteLinkController,
   ],
-  providers: [CreateUserService, AuthenticateUserService, CreateLinkService],
+  providers: [
+    CreateUserService,
+    AuthenticateUserService,
+    CreateLinkService,
+    DeleteLinkService,
+  ],
 })
 export class HttpModule {}
