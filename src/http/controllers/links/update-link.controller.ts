@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { UpdateLinkService } from '../../../services/links/update-link.service';
+import { ApiError } from '../../../services/errors/api-error';
 
 type Body = {
   url: string;
@@ -37,12 +38,12 @@ export class UpdateLinkController {
       const { id } = req.user;
       userId = id;
     }
-    // if (!url) {
-    //   throw new ApiError({
-    //     message: 'All fields are required.',
-    //     statusCode: 400,
-    //   });
-    // }
+    if (!url) {
+      throw new ApiError({
+        message: 'All fields are required.',
+        statusCode: 400,
+      });
+    }
     return this.updateLinkService.execute({
       url,
       id,

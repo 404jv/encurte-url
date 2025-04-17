@@ -56,4 +56,14 @@ describe('[PUT] /links', () => {
     expect(response.status).toBe(404);
     expect(response.body.message).toBe('Link not found.');
   });
+
+  it('should return 400 if url is not defined', async () => {
+    const response = await request(app.getHttpServer())
+      .put(`/links/${linkId}`)
+      .auth(token, { type: 'bearer' })
+      .send({});
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('All fields are required.');
+  });
 });
