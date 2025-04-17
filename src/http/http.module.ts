@@ -14,6 +14,8 @@ import { ListLinksService } from '../services/links/list-links.service';
 import { ListLinksController } from './controllers/links/list-links.controller';
 import { UpdateLinkController } from './controllers/links/update-link.controller';
 import { UpdateLinkService } from '../services/links/update-link.service';
+import { GetLinkController } from './controllers/links/get-link.controller';
+import { GetLinkService } from '../services/links/get-link.service';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { UpdateLinkService } from '../services/links/update-link.service';
     DeleteLinkController,
     ListLinksController,
     UpdateLinkController,
+    GetLinkController,
   ],
   providers: [
     CreateUserService,
@@ -39,6 +42,7 @@ import { UpdateLinkService } from '../services/links/update-link.service';
     DeleteLinkService,
     ListLinksService,
     UpdateLinkService,
+    GetLinkService,
   ],
 })
 export class HttpModule {}

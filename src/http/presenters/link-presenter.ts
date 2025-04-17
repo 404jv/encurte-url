@@ -1,6 +1,6 @@
 import { Link } from '@prisma/client';
 
-type LinkPresenterResponse = {
+export type LinkPresenterResponse = {
   id: string;
   url: string;
   origin_url: string;

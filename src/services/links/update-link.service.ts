@@ -27,6 +27,7 @@ export class UpdateLinkService {
     const link = await this.linksRepository.update({
       id,
       url,
+      totalClicks: linkExists.totalClicks,
     });
     const result = LinkPresenter.format(link);
     return result;
