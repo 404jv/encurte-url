@@ -8,4 +8,6 @@ export type CreateLink = {
 
 export abstract class LinksRepository {
   abstract create: (data: CreateLink) => Promise<Link>;
+  abstract delete: (id: string) => Promise<void>;
+  abstract findById: (id: string) => Promise<Link | null>;
 }

@@ -1,6 +1,6 @@
 import { GetIdAuthGuard } from '../../../auth/get-id-auth.guard';
 import { ApiError } from '../../../services/errors/api-error';
-import { CreateLinkService } from '../../../services/users/create-link.service';
+import { CreateLinkService } from '../../../services/links/create-link.service';
 import {
   Body,
   Controller,

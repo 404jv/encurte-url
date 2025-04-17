@@ -19,4 +19,23 @@ export class PrismaLinksRepository implements LinksRepository {
       },
     });
   }
+
+  async delete(id: string): Promise<void> {
+    await this.prismaService.link.update({
+      where: {
+        id,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  }
+
+  async findById(id: string): Promise<Link | null> {
+    return this.prismaService.link.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
 }

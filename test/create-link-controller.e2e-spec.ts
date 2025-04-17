@@ -19,7 +19,7 @@ describe('[POST] /links', () => {
     await app.init();
   });
 
-  it('should be able to create a user', async () => {
+  it('should be able to create a link', async () => {
     const response = await request(app.getHttpServer()).post('/links').send({
       url: 'https://example.com',
     });
