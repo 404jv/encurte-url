@@ -9,7 +9,6 @@ describe('[DELETE] /links/:id', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let userId: string;
-  let linkId: string;
   let userToken: string;
 
   afterAll(async () => {
@@ -26,7 +25,7 @@ describe('[DELETE] /links/:id', () => {
     await app.init();
   });
 
-  beforeEach(async () => {
+  it('should be able to a user delete their own link', async () => {
     const link = await prisma.link.create({
       data: {
         url: 'https://example.com',
@@ -35,20 +34,17 @@ describe('[DELETE] /links/:id', () => {
         totalClicks: 0,
       },
     });
-    linkId = link.id;
-  });
 
-  it('should be able to a user delete their own link', async () => {
     const response = await request(app.getHttpServer())
-      .delete(`/links/${linkId}`)
+      .delete(`/links/${link.id}`)
       .set('Authorization', `Bearer ${userToken}`);
 
-    const link = await prisma.link.findUnique({
+    const linkDeleted = await prisma.link.findUnique({
       where: {
-        id: linkId,
+        id: link.id,
       },
     });
-    expect(link).toBeNull();
+    expect(linkDeleted).toBeNull();
     expect(response.status).toBe(204);
     expect(response.body).toEqual({});
   });
@@ -76,5 +72,14 @@ describe('[DELETE] /links/:id', () => {
     expect(response.body.message).toBe(
       'You are not allowed to delete this link.',
     );
+  });
+
+  it('should return 404 when link id doest not exists', async () => {
+    const response = await request(app.getHttpServer())
+      .delete(`/links/non-existing-id`)
+      .set('Authorization', `Bearer ${userToken}`);
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe('Link not found.');
   });
 });

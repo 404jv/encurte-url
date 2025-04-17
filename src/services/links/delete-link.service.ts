@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  NotFoundException,
+} from '@nestjs/common';
 import { LinksRepository } from '../../database/contracts/contract-links-repository';
 
 type Request = {
@@ -12,7 +16,10 @@ export class DeleteLinkService {
 
   async execute({ id, userId }: Request): Promise<void> {
     const link = await this.linksRepository.findById(id);
-    if (link && link.userId !== userId) {
+    if (!link) {
+      throw new NotFoundException('Link not found.');
+    }
+    if (link.userId !== userId) {
       throw new UnauthorizedException(
         'You are not allowed to delete this link.',
       );
