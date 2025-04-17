@@ -39,9 +39,12 @@ export class AuthenticateUserService {
         statusCode: 401,
       });
     }
-    const accessToken = await this.jwtService.signAsync({
-      sub: user.id,
-    });
+    const accessToken = await this.jwtService.signAsync(
+      {
+        sub: user.id,
+      },
+      { secret: process.env.JWT_SECRET || 'secret' },
+    );
     return {
       accessToken: accessToken,
     };
