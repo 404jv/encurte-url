@@ -4,6 +4,7 @@ import { PrismaService } from './prisma.service';
 import {
   CreateLink,
   LinksRepository,
+  UpdateLink,
 } from '../contracts/contract-links-repository';
 
 @Injectable()
@@ -44,6 +45,17 @@ export class PrismaLinksRepository implements LinksRepository {
       where: {
         deletedAt: null,
         userId: id,
+      },
+    });
+  }
+
+  async update(data: UpdateLink): Promise<Link> {
+    return this.prismaService.link.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        url: data.url,
       },
     });
   }
