@@ -12,9 +12,11 @@ export type LinkPresenterResponse = {
 
 export class LinkPresenter {
   static format(link: Link): LinkPresenterResponse {
+    const baseUrl = process.env.BASE_URL ?? 'http://localhost:3000';
+
     return {
       id: link.id,
-      url: `http://localhost:3000/${link.id}`,
+      url: `${baseUrl}/${link.id}`,
       origin_url: link.url,
       total_clicks: link.totalClicks,
       user_id: link.userId,
